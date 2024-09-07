@@ -1,16 +1,10 @@
 import express from 'express';
+import usersRouter from './users';
+// import productsRouter from './products'; // Mengimpor router dari folder products
 
-import MessageResponse from '../interfaces/MessageResponse';
-import emojis from './emojis';
+const apiRouter = express.Router();
 
-const router = express.Router();
+apiRouter.use('/users', usersRouter);
+// apiRouter.use('/products', productsRouter);
 
-router.get<{}, MessageResponse>('/', (req, res) => {
-  res.json({
-    message: 'API - 👋🌎🌍🌏',
-  });
-});
-
-router.use('/emojis', emojis);
-
-export default router;
+export default apiRouter;
