@@ -9,7 +9,6 @@ export function notFound(req: Request, res: Response, next: NextFunction) {
     null,
     `🔍 - Not Found - ${req.originalUrl}`,
     res,
-    // requestId
   );
 }
 
@@ -27,6 +26,5 @@ export function errorHandler(
     null,
     err.message,
     res,
-    // requestId
   );
 }
