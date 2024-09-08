@@ -18,13 +18,16 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
+  if (res.headersSent) {
+    return next(err);
+  }
+
   const statusCode = res.statusCode !== 200 ? res.statusCode : HttpStatus.INTERNAL_SERVER_ERROR;
   response(
-    
     statusCode,
     StatusText.ERROR,
     null,
     err.message,
-    res,
+    res
   );
 }
