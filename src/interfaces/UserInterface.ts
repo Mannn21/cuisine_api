@@ -22,4 +22,10 @@ export interface PublicUserInterface {
     birthDate?: Date;
     phoneNumber?: string;
     profileImageUrl?: string;
-  }
+}
+
+export interface TokenUserDataInterface {
+    id: string;
+    name: string;
+    email: string;
+}

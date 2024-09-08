@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+import { doc, setDoc, collection, query, where, getDocs, getDoc } from "firebase/firestore"; 
 import { Timestamp } from "firebase/firestore";
 import { db } from '../src/firebase';
 import { v4 as uuidv4 } from 'uuid';
@@ -56,6 +56,52 @@ const getAllUsers = async (req: Request, res: Response) => {
     }
 };
 
+const getUserById = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const docRef = doc(db, "users", userId);
+        const docSnap = await getDoc(docRef);
+
+        if(!docSnap.exists()) return response(HttpStatus.NOT_FOUND, StatusText.NOT_FOUND, null, 'User not found', res);
+
+        const userData = docSnap.data();
+        const createdAt = userData.createdAt instanceof Timestamp ? userData.createdAt.toDate() : userData.createdAt;
+        const birthDate = userData.birthDate instanceof Timestamp ? userData.birthDate.toDate() : userData.birthDate;
+
+        const user: PublicUserInterface = {
+            name: userData.name,
+            email: userData.email,
+            address: userData.address,
+            createdAt: createdAt.toLocaleDateString(),
+            id: userData.id,
+            birthDate: birthDate.toLocaleDateString(),
+            phoneNumber: userData.phoneNumber, 
+            profileImageUrl: userData.profileImageUrl
+        }
+
+        return response(HttpStatus.OK, StatusText.OK, user, 'Get user by id success', res);
+        
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return response(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                StatusText.ERROR,
+                null,
+                `Error occurred: ${error.message}`,
+                res
+            );
+        } else {
+            return response(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                StatusText.ERROR,
+                null,
+                'An unknown error occurred',
+                res
+            );
+        }
+    }
+}
+
 const addUser = async (req: Request, res: Response) => {
     try {
         const { name, email, password, confPassword } = req.body;
@@ -106,4 +152,4 @@ const addUser = async (req: Request, res: Response) => {
     }
 }
 
-export default {getAllUsers, addUser};
+export default {getAllUsers, getUserById, addUser};
