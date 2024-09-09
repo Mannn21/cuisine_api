@@ -15,5 +15,10 @@
     "./api/*.ts",
     "src/**/*.ts",
     "test/**/*.ts",
+    "src/*.d.ts",
+    "controller/*.ts"
   ],
+  "files": [
+    "src/types.d.ts"  // Tambahkan baris ini
+  ]
 }
